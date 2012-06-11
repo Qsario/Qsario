@@ -1,0 +1,40 @@
+/* Color Scheme:
+
+Primary (Green):
+	Normal:  #00AF64
+	Dark:    #218359
+	Darker:  #007241
+	Light:   #36D792
+	Lighter: #61D7A4
+
+Secondary (Yellow):
+
+	Normal: #FFE800
+	Dark:   #BFB230
+	Darker: #A69700
+	Light:  #FFEE40
+	Ligher: #FFF273
+
+Tertiary (Purple):
+
+	Normal: #530FAD
+	Dark:   #4F2982
+	Darker: #330570
+	Light:  #8243D6
+	Ligher: #996AD6
+
+*/
+
+a:link	  {color: #530FAD;}
+a:visited {color: #8243D6;}
+a:hover   {color: #FFE800;}
+a:active  {color: #FFEE40;}
+
+body {background-image:url(/images/green.png);}
+
+fieldset {background-color: #61D7A4;}
+legend   {background-color: #FFE800;}
+th {background-color: #996AD6;}
+tr {background-color: #36D792;}
+
+#footer {background-color: #00AF64;}
