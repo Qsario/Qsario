@@ -56,7 +56,7 @@
       	margin: 0 auto;
       }
       
-      input[type="submit"] {
+      .login input[type="submit"] {
       	width: 80%;
       	margin: 0 auto;
       }
@@ -85,7 +85,7 @@
                       %label{:for => "password"} Password
                     %td.borderless
                       %input#password{:maxlength => "50", :name => "password", :size => "18", :type => "password"}/
-                %input{:type => "submit", :value => "Log In"}
+                %input.login{:type => "submit", :value => "Log In"}
               %br
                 %a{:href => "/register.html"} Create an account
                 %br
@@ -138,9 +138,12 @@
           %input#tab-4{:name => "tab-group-1", :type => "radio"}
             %label{:for => "tab-4"} Upload
             .content
+              %form{:action=>"/upload",:method=>"post",:enctype=>"multipart/form-data"}
+                %input{:type=>"file",:name=>"file"}
+                %input{:type=>"submit",:value=>"Upload"}
               You need to log in to upload. Do you need to
               = succeed "?" do
-                %a{:href => "/register.html"} create an account
+                %a{:href => "/register"} create an account
     / End of body
     / Footer
     #footer
