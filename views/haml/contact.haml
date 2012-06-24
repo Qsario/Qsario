@@ -1,0 +1,49 @@
+%html
+  %head
+    %title Qsario | Contact Us - Find and Share Minecraft Worlds
+    %link{:href => "/css/layout.css", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/css/colors.css", :rel => "stylesheet", :type => "text/css"}/
+  %body
+    #header
+      %img{:alt => "Qsario", :src => "/images/Qsario_logo.png", :style => "float:left;"}/
+    / End of header
+    #content
+      %fieldset#contact
+        %legend Contact Qsario
+        %form#contact_form
+          %br/
+          %label
+            Why are you contacting us?
+            %br/
+            %br/
+            %select{:name => "contact_reason"}
+              %option{:selected => "", :value => "rant"} Comment
+              %option{:value => "question"} Question
+              %option{:value => "security"} Security Flaw
+              %option{:value => "dmca"} DMCA Takedown Request
+          %br/
+          %br/
+          %label
+            Message
+            %br/
+            %br/
+            %textarea{:cols => "80", :name => "message", :placeholder => "Type your message here.  If you are making a DMCA Takedown request, remember to give us the link!", :rows => "10", :wrap => "soft"}
+          %br/
+          %br/
+          %input{:onclick => "javascript:alert('Message Sent! (todo)');return false;", :type => "submit", :value => "Send Message"}/
+        %br/
+    / End of content
+    / Footer
+    #footer
+      %br/
+      %br/
+      %nav#Navbar
+        %a{:href => "/"} Home
+        |
+        %a{:href => "/contact"} Contact Us
+        |
+        %a{:href => "/legal"} Legal Info
+      = succeed "&copy;2012" do
+        %br/
+      Qsario
+    / End of footer

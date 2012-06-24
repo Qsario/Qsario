@@ -1,0 +1,35 @@
+$main-color:   #00AF64
+$second-color: #FFE800
+$third-color:  #530FAD
+
+a
+  &:link
+    color: $third-color
+  &:visited
+    color: lighten($third-color, 10%)
+  &:hover
+    color: $second-color
+  &:active
+    color: $second-color
+
+body
+  background-image: url(/images/green.png)
+
+fieldset
+  background-color: lighten($main-color, 20%)
+
+legend
+  background-color: $second-color
+
+th
+  background-color: lighten($third-color, 20%)
+
+tr
+  background-color: lighten($main-color, 10%)
+
+input
+  &[type="submit"]
+    background-color: $second-color
+
+#footer
+  background-color: $main-color

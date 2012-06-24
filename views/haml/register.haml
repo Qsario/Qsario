@@ -1,0 +1,87 @@
+%html
+  %head
+    %title Qsario | Register - Find and Share Minecraft Worlds
+    %link{:href => "/css/layout.css", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/css/colors.css", :rel => "stylesheet", :type => "text/css"}/
+    :css
+      #new_account {
+      	float: left;
+      	width: 200px;
+      }
+      
+      #explanation {
+      	background-color: #61D7A4;
+      	margin-top: 10px;
+      	margin-left: 230px;
+      	padding: 10px;
+      	min-height:290px;
+      	height:auto !important;
+      	height:290px;
+      }
+      
+      input[type="submit"] {
+      	width: 80%;
+      	margin: 0 auto;
+      }
+      
+  %body
+    #header
+      %img{:alt => "Qsario", :src => "/images/Qsario_logo.png", :style => "float:left;"}/
+    / End of header
+    #content
+      %fieldset#new_account
+        %legend User Registration
+        %form#new_account_form{:onsubmit => "javascript:alert('Creating new account! (to do)');return false;"}
+          %span{:style => "visibility: hidden; height: 0px; display: none !important"}
+            Spammers only:
+            %input{:name => "email", :size => "1", :type => "text"}/
+          %br/
+          %label
+            Email
+            %br/
+            %input{:maxlength => "50", :name => "spambot_fakeout", :placeholder => "user@example.com", :size => "20", :type => "text"}/
+          %br/
+          %br/
+          %label
+            Password
+            %br/
+            %input{:maxlength => "50", :name => "password", :size => "20", :type => "password"}/
+          %br/
+          %br/
+          %label
+            Confirm password
+            %br/
+            %input{:maxlength => "50", :name => "password_confirm", :size => "20", :type => "password"}/
+          %br/
+          %br/
+          %input{:type => "submit", :value => "Register"}/
+          %br/
+      #explanation
+        %p
+          You only need an account to upload.  Downloading is free.  By registering, you agree to the site rules.
+          %br/
+          %br/
+          Site Rules:
+          %br/
+          %br/
+        %ul
+          %li Don't upload anything that doesn't belong here.
+          %li Don't spam anyone.
+          %li Don't try to hack the site.
+          %li Don't overload or cause trouble for the site.
+          %li We can take files down for any reason.
+    / End of content
+    / Footer
+    #footer
+      %br/
+      %br/
+      %nav#Navbar
+        %a{:href => "/"} Home
+        |
+        %a{:href => "/contact"} Contact Us
+        |
+        %a{:href => "/legal"} Legal Info
+      = succeed "&copy;2012" do
+        %br/
+      Qsario
+    / End of footer
