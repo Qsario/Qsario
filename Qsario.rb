@@ -58,7 +58,7 @@ post '/upload' do
   # TODO:  Check if file already existed, etc.
   FileUtils.cp(tempfile.path, filename)
   FileUtils.chmod(0400, filename)
-  redirect to('/view/#{file_hash}')
+  redirect to("/view/#{file_hash}")
 end
 
 get '/view/:file' do
