@@ -39,7 +39,7 @@ get '/css/:style' do |style|
   styles = %w(colors layout)
   style = style.sub(".css", "")	# Can't use sub!() because it returns nil if no match.
   pass unless styles.index(style) >= 0
-  sass style.sub(".css", "").to_sym
+  sass style.to_sym
 end
 
 post '/upload' do
