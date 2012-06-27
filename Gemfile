@@ -6,3 +6,5 @@ gem 'haml'
 gem 'fileutils'
 gem 'awesome_print'
 gem 'redis'
+gem 'thin'
+
