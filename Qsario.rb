@@ -56,7 +56,7 @@ post '/upload' do
   REDIS.set file_hash, name  # Save original filename
 
   # TODO:  Check if file already existed, etc.
-  FileUtils.mv(tempfile.path, filename)
+  FileUtils.cp(tempfile.path, filename)
   FileUtils.chmod(0400, filename)
   redirect to('/view/#{file_hash}')
 end
