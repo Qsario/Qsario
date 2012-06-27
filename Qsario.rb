@@ -4,9 +4,19 @@ require 'sass'
 require 'digest'
 require 'base64'
 require 'fileutils'
+require 'redis'
 #require 'awesome_print'
 
 set :views, :sass => 'views/sass', :haml => 'views/haml', :default => 'views'
+
+configure do
+  if (ENV["REDISTOGO_URL"])
+    uri = URI.parse(ENV["REDISTOGO_URL"])
+    REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+  else
+    REDIS = Redis.new
+  end
+end
 
 helpers do
   def find_template(views, name, engine, &block)
@@ -43,6 +53,8 @@ post '/upload' do
   # Later, we can also ban hashes of known-bad files, etc.
   file_hash = Base64.urlsafe_encode64(Digest::SHA1.file(tempfile.path).digest).sub("=","")
   filename = "./uploads/#{file_hash}"
+  REDIS.set file_hash, name  # Save original filename
+
   # TODO:  Check if file already existed, etc.
   FileUtils.mv(tempfile.path, filename)
   FileUtils.chmod(0400, filename)
@@ -70,8 +82,9 @@ get '/download/:file' do
 
   # Keeping this test separate until I know there's nothing bad in there.
   halt 404 unless File.exists?("./uploads/#{params[:file]}")
-
-  attachment "TODO get filename from database"
+  
+  # Set filename back to the original
+  attachment (REDIS.get params[:file])
   send_file "./uploads/#{params[:file]}"  # TODO:  set :type
 end
 
