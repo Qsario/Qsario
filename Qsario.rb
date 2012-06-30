@@ -29,7 +29,7 @@ get '/' do
   haml :index
 end
 
-get '/:page' do |p|
+get '/:page/?' do |p|
   pages = %w(contact legal register)
   pass unless pages.index(p) >= 0
   haml p.to_sym
@@ -42,7 +42,7 @@ get '/css/:style' do |style|
   sass style.to_sym
 end
 
-post '/upload' do
+post '/upload/?' do
   unless params[:file] && 
       (tempfile = params[:file][:tempfile]) && 
       (name = params[:file][:filename])

@@ -25,9 +25,7 @@
       }
       
   %body
-    #header
-      %img{:alt => "Qsario", :src => "/images/Qsario_Logo.png", :style => "float:left;"}/
-    / End of header
+    = haml :header
     #content
       %fieldset#new_account
         %legend User Registration
@@ -70,18 +68,6 @@
           %li Don't try to hack the site.
           %li Don't overload or cause trouble for the site.
           %li We can take files down for any reason.
+          %li Do not upload anything that belongs to Mojang AB.
     / End of content
-    / Footer
-    #footer
-      %br/
-      %br/
-      %nav#Navbar
-        %a{:href => "/"} Home
-        |
-        %a{:href => "/contact"} Contact Us
-        |
-        %a{:href => "/legal"} Legal Info
-      = succeed "&copy;2012" do
-        %br/
-      Qsario
-    / End of footer
+    = haml :footer

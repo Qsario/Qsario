@@ -4,16 +4,15 @@
     %link{:href => "/css/layout.css", :rel => "stylesheet", :type => "text/css"}/
     %link{:href => "/css/colors.css", :rel => "stylesheet", :type => "text/css"}/
   %body
-    #header
-      %img{:alt => "Qsario", :src => "/images/Qsario_Logo.png", :style => "float:left;"}/
-    / End of header
+    = haml :header
     #content
       %fieldset
         %legend Legal Info
         %p
-          We comply with the DMCA.  Please
+          Minecraft is a trademark of Mojang AB.  We are not affiliated with them.
+          We comply with the DMCA.  Please 
           %a{:href => "/contact"} contact us
-          about any infringing content.
+          about any infringing content so that we can remove it.
         %br/
         %br/
         %p Use of this site constitutes acceptance of the site rules:
@@ -26,17 +25,4 @@
           %li Don't overload or cause trouble for the site.
           %li We can take files down for any reason.
     / End of content
-    / Footer
-    #footer
-      %br/
-      %br/
-      %nav#Navbar
-        %a{:href => "/"} Home
-        |
-        %a{:href => "/contact"} Contact Us
-        |
-        %a{:href => "/legal"} Legal Info
-      = succeed "&copy;2012" do
-        %br/
-      Qsario
-    / End of footer
+    = haml :footer

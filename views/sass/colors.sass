@@ -27,6 +27,16 @@ th
 tr
   background-color: lighten($main-color, 10%)
 
+.tab label 
+  background: lighten($third-color, 10%)
+  border: 1px solid $main-color
+
+.content
+  background: lighten($main-color, 10%)
+
+[type=radio]:checked ~label
+  background: lighten($third-color, 20%)
+
 input
   &[type="submit"]
     background-color: $second-color

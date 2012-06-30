@@ -17,9 +17,7 @@
       }
       
       .tab label {
-      	background: #8243D6;
       	padding: 10px;
-      	border: 1px solid #00AF64;
       	margin-left: -1px;
       	position: relative;
       	left: 6px;
@@ -33,7 +31,6 @@
       	position: absolute;
       	top: 28px;
       	left: 0;
-      	background: #61D7A4;
       	right: 0;
       	bottom: 0;
       	padding: 20px;
@@ -43,7 +40,6 @@
       }
       
       [type=radio]:checked ~ label {
-      	background: #996AD6;
       	z-index: 2;
       }
       
@@ -66,31 +62,7 @@
       }
       
   %body
-    / Header
-    #header
-      %img{:alt => "Qsario", :src => "/images/Qsario_Logo.png", :style => "float:left;"}
-        %fieldset{:style => "float:right;border:1;"}
-          %legend{:style => "text-align:center;"} User Panel
-          #Login
-            %br
-              %form{:onsubmit => "javascript:alert('Logged in! (to do)');return false;"}
-                %table.borderless
-                  %tr
-                    %td.borderless
-                      %label{:for => "email"} Email
-                    %td.borderless
-                      %input#email{:maxlength => "50", :name => "email", :placeholder => "user@example.com", :size => "18", :type => "text"}/
-                  %tr
-                    %td.borderless
-                      %label{:for => "password"} Password
-                    %td.borderless
-                      %input#password{:maxlength => "50", :name => "password", :size => "18", :type => "password"}/
-                %input.login{:type => "submit", :value => "Log In"}
-              %br
-                %a{:href => "/register.html"} Create an account
-                %br
-                  %a{:href => "#", :onclick => "javascript:alert('To do!');return false;"} Account settings
-    / End of Header
+    = haml :header
     / Body
     #content
       .tabs
@@ -145,16 +117,4 @@
               = succeed "?" do
                 %a{:href => "/register"} create an account
     / End of body
-    / Footer
-    #footer
-      %br
-        %br
-          %nav#Navbar
-            %a{:href => "/"} Home
-            |
-            %a{:href => "/contact"} Contact Us
-            |
-            %a{:href => "/legal"} Legal Info
-          %br
-            &copy;2012 Qsario
-    / End of footer
+    = haml :footer
