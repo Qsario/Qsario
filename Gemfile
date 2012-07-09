@@ -7,4 +7,6 @@ gem 'fileutils'
 gem 'awesome_print'
 gem 'redis'
 gem 'thin'
+gem 'sequel'
+gem 'pg'
 
