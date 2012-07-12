@@ -6,6 +6,7 @@ Sequel.migration do
       String	  :name,	      :null => false, :size	=> 25,	  :unique => true
       String	  :email,	      :null => false, :size	=> 50,	  :unique => true
       String	  :password,	      :null => false, :size	=> 100
+      Fixnum	  :takedowns,	      :null => false, :default	=> 0
       TrueClass	  :enabled,	      :null => false, :default  => true
       FalseClass  :admin,	      :null => false, :default	=> false
       DateTime	  :joined_at,	      :null => false
