@@ -1,6 +1,6 @@
 Sequel.migration do
   # Initialize the site DB by creating an account for myself.
-  change do
+  up do
     self[:users].insert(
       # The password is just a hash and  I will change it immediately.
       :name	    => 'Qsario',
@@ -10,5 +10,9 @@ Sequel.migration do
       :admin	    => true,
       :joined_at    => Time.now
     )
+  end
+
+  down do
+    self[:users].filter(:name => 'Qsario').delete
   end
 end

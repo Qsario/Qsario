@@ -5,7 +5,9 @@ require 'digest'
 require 'base64'
 require 'fileutils'
 require 'redis'
-#require 'awesome_print'
+require 'awesome_print'
+require 'salty'
+require 'sequel'
 
 set :views, :sass => 'views/sass', :haml => 'views/haml', :default => 'views'
 
@@ -16,6 +18,8 @@ configure do
   else
     REDIS = Redis.new
   end
+
+  Sequel.connect(ENV['DATABASE_URL'] || 'postgres://localhost/Qsario')
 end
 
 helpers do
@@ -33,6 +37,11 @@ get '/:page/?' do |p|
   pages = %w(contact legal register)
   pass unless pages.index(p) >= 0
   haml p.to_sym
+end
+
+post '/login/?' do
+  ap params
+  redirect to('/')
 end
 
 get '/css/:style' do |style|

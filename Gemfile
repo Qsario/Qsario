@@ -1,12 +1,13 @@
 source :rubygems
 
-gem 'sinatra'
-gem 'sass'
-gem 'haml'
-gem 'fileutils'
 gem 'awesome_print'
-gem 'redis'
-gem 'thin'
-gem 'sequel'
+gem 'fileutils'
+gem 'haml'
 gem 'pg'
+gem 'redis'
+gem 'sass'
+gem 'salty'
+gem 'sequel'
+gem 'sinatra'
+gem 'thin'
 

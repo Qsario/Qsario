@@ -1,14 +1,15 @@
 Sequel.migration do
+
   change do
     create_table(:users) do
       primary_key :id,		      :type => Bignum
       String	  :name,	      :null => false, :size	=> 25,	  :unique => true
-      String	  :email,	      :null => true,  :size	=> 50
+      String	  :email,	      :null => false, :size	=> 50,	  :unique => true
       String	  :password,	      :null => false, :size	=> 100
       TrueClass	  :enabled,	      :null => false, :default  => true
       FalseClass  :admin,	      :null => false, :default	=> false
       DateTime	  :joined_at,	      :null => false
-      constraint(:name_min_length) { char_length(name) > 2 }
+      constraint(:name_min_length) { :char_length.sql_function(:name) > 2 }
     end
 
     create_table(:files) do
@@ -22,5 +23,6 @@ Sequel.migration do
     end
 
     create_join_table(:user_id => :users, :file_id => :files)
+
   end
 end

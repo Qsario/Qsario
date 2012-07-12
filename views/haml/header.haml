@@ -5,7 +5,7 @@
       %legend{:style => "text-align:center;"} User Panel
       #Login
         %br
-          %form{:onsubmit => "javascript:alert('Logged in! (to do)');return false;"}
+          %form{:action => "/login", :method => "post"}
             %table.borderless
               %tr
                 %td.borderless
