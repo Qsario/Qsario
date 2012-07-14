@@ -13,9 +13,9 @@ Sequel.migration do
       constraint(:name_min_length) { :char_length.sql_function(:name) > 2 }
     end
 
-    create_table(:files) do
+    create_table(:uploads) do
       primary_key :id,		      :type => Bignum
-      foreign_key :uploader,	      :users
+      foreign_key :user_id,	      :users
       String	  :name,	      :null => false, :size	=> 100
       String	  :md5,		      :null => false, :size	=> 35,	  :unique => true
       String	  :desc,	      :null => true,  :text	=> true
@@ -23,7 +23,7 @@ Sequel.migration do
       FalseClass  :taken_down,	      :null => false, :default	=> false
     end
 
-    create_join_table(:user_id => :users, :file_id => :files)
+    create_join_table(:user_id => :users, :upload_id => :uploads)
 
   end
 end

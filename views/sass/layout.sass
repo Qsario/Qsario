@@ -2,7 +2,6 @@
 
 $page-width: 750px
 $header-height: 300px
-$body-height: 500px
 $footer-height: 150px
 $radius: 8px
 $padding: 6px
@@ -78,9 +77,10 @@ ul li
 #content
   width: $page-width
   margin-top: 10px
-  min-height: $body-height
   height: auto !important
-  height: $body-height
+
+#explanation
+  @include rounded($radius)
 
 #footer
   @include rounded($radius)
