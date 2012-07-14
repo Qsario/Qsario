@@ -1,26 +1,7 @@
 / Header
 #header
   %img{:alt => "Qsario", :src => "/images/Qsario_Logo.png", :style => "float:left;"}
-    %fieldset{:style => "float:right;border:1;"}
-      %legend{:style => "text-align:center;"} User Panel
-      #Login
-        %br
-          %form{:action => "/login", :method => "post"}
-            %table.borderless
-              %tr
-                %td.borderless
-                  %label{:for => "email"} Email
-                %td.borderless
-                  %input#email{:maxlength => "50", :name => "email", :placeholder => "user@example.com", :size => "18", :type => "text"}/
-              %tr
-                %td.borderless
-                  %label{:for => "password"} Password
-                %td.borderless
-                  %input#password{:maxlength => "50", :name => "password", :size => "18", :type => "password"}/
-            %input.login{:type => "submit", :value => "Log In"}
-          %br
-            %a{:href => "/register.html"} Create an account
-            %br
-              %a{:href => "#", :onclick => "javascript:alert('To do!');return false;"} Account settings
+  = haml(:login) unless (@logged_in || @no_login_form)
+
 / End of Header
 

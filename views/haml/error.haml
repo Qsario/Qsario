@@ -1,0 +1,15 @@
+%html
+  %head
+    %title Qsario | Legal Info - Find and Share Minecraft Worlds
+    %link{:href => "/css/layout.css", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/css/colors.css", :rel => "stylesheet", :type => "text/css"}/
+  %body
+    = haml :header
+    #content
+      %fieldset
+        %legend 
+          = @error_title
+        %p
+          = @error_message
+    / End of content
+    = haml :footer
