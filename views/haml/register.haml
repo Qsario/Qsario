@@ -28,11 +28,11 @@
       }
       
   %body
-    = haml :header
+    = haml :header, :locals => { :no_login_form => true }
     #content
       %fieldset#new_account
         %legend User Registration
-        %form#new_account_form{:onsubmit => "javascript:alert('Creating new account! (to do)');return false;"}
+        %form#new_account_form{:action => "/register", :method => "post"}
           %span{:style => "visibility: hidden; height: 0px; display: none !important"}
             Spammers only:
             %input{:name => "email", :size => "1", :type => "text"}/

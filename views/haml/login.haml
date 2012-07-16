@@ -1,21 +1,70 @@
-%fieldset{:style => "float:right;border:1;"}
-  %legend{:style => "text-align:center;"} User Panel
-  #Login
-    %br
-      %form{:action => "/login", :method => "post"}
-        %table.borderless
-          %tr
-            %td.borderless
-              %label{:for => "name"} Name
-            %td.borderless
-              %input#email{:maxlength => "50", :name => "name", :size => "18", :type => "text"}/
-          %tr
-            %td.borderless
-              %label{:for => "password"} Password
-            %td.borderless
-              %input#password{:maxlength => "50", :name => "password", :size => "18", :type => "password"}/
-        %input.login{:type => "submit", :value => "Log In"}
-      %br
-        %a{:href => "/register"} Create an account
-        %br
+%html
+  %head
+    %title Qsario | Register - Find and Share Minecraft Worlds
+    %link{:href => "/css/layout.css", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/css/colors.css", :rel => "stylesheet", :type => "text/css"}/
+    :css
+      #new_account {
+      	float: left;
+      	width: 200px;
+      }
 
+      #header {
+        height: 150px;
+      }
+
+      #explanation {
+      	margin-top: 10px;
+      	margin-left: 230px;
+      	padding: 10px;
+      	min-height:360px;
+      	height:auto !important;
+      	height:360px;
+      }
+      
+      input[type="submit"] {
+      	width: 80%;
+      	margin: 0 auto;
+      }
+      
+  %body
+    = haml :header, :locals => { :no_login_form => true }
+    #content
+      %fieldset#new_account
+        %legend User Login 
+        %form#new_account_form{:action => "/login", :method => "post"}
+          %span{:style => "visibility: hidden; height: 0px; display: none !important"}
+            Spammers only:
+            %input{:name => "email", :size => "1", :type => "text"}/
+          %br/
+          %label
+            Name
+            %br/
+            %input{:maxlength => "25", :name => "name", :placeholder => "new_user123", :size => "20", :type => "text"}/
+          %br/
+          %br/
+          %label
+            Password
+            %br/
+            %input{:maxlength => "50", :name => "password", :size => "20", :type => "password"}/
+          %br/
+          %br/
+          %input{:type => "submit", :value => "Register"}/
+          %br/
+      #explanation
+        %p
+          You are not logged in.  Please log in first and remember the site rules. 
+          %br/
+          %br/
+          Site Rules:
+          %br/
+          %br/
+        %ul
+          %li Don't upload anything that doesn't belong here.
+          %li Don't spam anyone.
+          %li Don't try to hack the site.
+          %li Don't overload or cause trouble for the site.
+          %li We can take files down for any reason.
+          %li Do not upload anything that belongs to Mojang AB.
+    / End of content
+    = haml :footer

@@ -1,18 +1,16 @@
-REQS = %w(awesome_print base64 digest fileutils haml redis salty sass sequel sinatra)
+REQS = %w(awesome_print aws/s3 base64 digest fileutils haml json 
+	  redis salty sass securerandom sequel sinatra virus_blacklist)
 REQS.each { |r| require r }
 
 configure do
   set :views, :sass => 'views/sass', :haml => 'views/haml', :default => 'views'
-  use Rack::Session::Cookie,  :key => 'Qsario_Session',
+  use Rack::Session::Cookie,  :key => 'rack.session',
 			      :expire_after => 60*60*24,
 			      :secret => ENV['COOKIE_SECRET']
-  uri = URI.parse(ENV["REDISTOGO_URL"])
-  REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
-  Sequel.connect(ENV['DATABASE_URL'] || 'postgres://localhost/Qsario')
+  REDIS = Redis.connect(:url => ENV["REDISTOGO_URL"])
+  Sequel.connect(ENV['HEROKU_POSTGRESQL_GOLD_URL'] || 'postgres://localhost/Qsario')
+  Dir["./models/*.rb"].each { |model| require model }
 end
-
-MODELS = %w(User Upload)
-MODELS.each { |m| require './models/'+m }
 
 helpers do
   def find_template(views, name, engine, &block)
@@ -20,29 +18,28 @@ helpers do
     super(folder, name, engine, &block)
   end
 
-  def error_page(opt = {})
+  def error_page(opt = {})  # Helps make nice error pages.
     @error_code	    = response.status.to_s
     @error_title    = opt[:title]   || ("Error " + @error_code)
     @error_message  = opt[:message] || "Something blew up.  Who let a creeper in?"
     halt haml :error
   end
 
-  def md5_to_slug(md5)
-    # We base64 encode our hashes, then remove the padding (the '=' at the end)
-    # to make them shorter.
-    Base64.urlsafe_encode64(md5).gsub("=", "")
+  def md5_to_slug(md5)	    # Makes MD5s into short, URL-safe strings.
+    return Base64.urlsafe_encode64(md5).gsub("=", "")  
   end
 
-  def valid_slug?(slug)
-    # An MD5, once base64ed and with the padding removed is exactly 22 chars long.
-    !!/\A[A-Za-z0-9_-]{22}\z/.match(slug)
+  def valid_slug?(slug)	    # Checks if it looks like something from md5_to_slug. 
+    return !!/\A[A-Za-z0-9_-]{22}\z/.match(slug)  # Return booleans, not matchdata. 
+  end
+
+  def must_login!	    # Forces users to log in if they haven't. 
+    redirect to("/login") unless REDIS.exists("user:" + session[:id])
   end
 end
 
-get '/me' do
-  puts User.first.awesome_inspect
-  puts User.first.uploads.awesome_inspect
-  User.first.uploads.to_s
+before do   # Gives everyone a session ID to identify them.
+  session[:id] ||= SecureRandom.uuid
 end
 
 get '/' do
@@ -51,17 +48,29 @@ end
 
 get '/:page/?' do |p|
   pages = %w(contact legal)
-  pass unless pages.index(p) 
+  pass unless pages.find(p) 
   haml p.to_sym
 end
 
 get '/register/?' do
-  @no_login_form = true	  # Hide the form in the header
   haml :register
 end
 
-post '/login/?' do
+post '/register/?' do
   ap params
+  redirect to('/')
+end
+
+post '/login/?' do
+  @user = User.find(:name => params[:name])
+  if @user && Salty.check(params[:password], @user.values[:password])
+    puts "Login success!"
+    @key = "user:" + session[:id]
+    REDIS.set @key, @user.to_json
+    REDIS.expires @key, 60*60*24    # One day from now.
+  else
+    error_page(title: "Login Failed", message: "Your username or password was incorrect.")
+  end
   redirect to('/')
 end
 
@@ -77,7 +86,8 @@ end
 # and put in public/css.
 
 post '/upload/?' do
-  unless params[:file] && 
+  must_login!
+  unless params[:file] &&  # TODO: Fix - files will go to S3. 
       (tempfile = params[:file][:tempfile]) && 
       (name = params[:file][:filename])
     status 400
@@ -86,7 +96,8 @@ post '/upload/?' do
 
   # This gives us a short, URL-safe string and gives us free deduplication
   # Later, we can also ban hashes of known-bad files, etc.
-  file_hash = md5_to_slug(Digest::MD5.file(tempfile.path).digest)
+  md5 = Digest::MD5.file(tempfile.path).digest
+  file_hash = md5_to_slug(md5)
   filename = "./uploads/#{file_hash}"
   REDIS.set file_hash, name  # Save original filename
 

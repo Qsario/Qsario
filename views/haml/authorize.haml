@@ -1,0 +1,22 @@
+%fieldset{:style => "float:right;border:1;"}
+  %legend{:style => "text-align:center;"} User Panel
+  #Login
+    %br
+      %form{:action => "/login", :method => "post"}
+        %table.borderless
+          %tr
+            %td.borderless
+              %label{:for => "name"} Name
+            %td.borderless
+              %input#email{:maxlength => "50", :name => "name", :size => "18", :type => "text"}/
+          %tr
+            %td.borderless
+              %label{:for => "password"} Password
+            %td.borderless
+              %input#password{:maxlength => "50", :name => "password", :size => "18", :type => "password"}/
+        %br
+        %input.login{:type => "submit", :value => "Log In"}
+      %br
+        %a{:href => "/register"} Create an account
+        %br
+
