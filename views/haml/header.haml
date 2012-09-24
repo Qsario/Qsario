@@ -1,7 +1,7 @@
 / Header
 #header
   %img{:alt => "Qsario", :src => "/images/Qsario_Logo.png", :style => "float:left;"}
-  = haml(:authorize) unless (@logged_in || locals[:no_login_form])
+  = haml(:authorize) unless (locals[:no_login_form] || logged_in?)
 
 / End of Header
 

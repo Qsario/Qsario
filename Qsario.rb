@@ -1,4 +1,4 @@
-REQS = %w(awesome_print aws/s3 base64 digest fileutils haml json 
+REQS = %w(awesome_print aws/s3 base64 digest fileutils haml json openssl 
 	  redis salty sass securerandom sequel sinatra virus_blacklist)
 REQS.each { |r| require r }
 
@@ -14,8 +14,20 @@ end
 
 helpers do
   def find_template(views, name, engine, &block)
-    _, folder = views.detect(views[:default]) { |k,v| engine == Tilt[k] }
+    ignored, folder = views.detect(views[:default]) { |k,v| engine == Tilt[k] }
     super(folder, name, engine, &block)
+  end
+
+  def aws_encode(text)	# This is how I have to encode my policy & signature for AWS.
+    Base64.encode64(text).gsub("\n","")
+  end
+
+  def aws_signature(policy) # Generates a signature when given a policy.
+    aws_encode(
+      OpenSSL::HMAC.digest(
+	OpenSSL::Digest::Digest.new('sha1'), 
+	ENV['AWS_SECRET_ACCESS_KEY'], 
+	aws_encode(policy)))
   end
 
   def error_page(opt = {})  # Helps make nice error pages.
@@ -33,8 +45,12 @@ helpers do
     return !!/\A[A-Za-z0-9_-]{22}\z/.match(slug)  # Return booleans, not matchdata. 
   end
 
+  def logged_in?
+    REDIS.exists ("user:" + session[:id])
+  end
+
   def must_login!	    # Forces users to log in if they haven't. 
-    redirect to("/login") unless REDIS.exists("user:" + session[:id])
+    redirect to("/login") unless logged_in? 
   end
 end
 
@@ -46,6 +62,10 @@ get '/' do
   haml :index
 end
 
+post '/test' do
+  ap params  # Debug route for seeing what params we actually get.  Only works from command line anyhow.
+end
+
 get '/:page/?' do |p|
   pages = %w(contact legal)
   pass unless pages.find(p) 
@@ -53,21 +73,21 @@ get '/:page/?' do |p|
 end
 
 get '/register/?' do
+  error_page(title: "Already Registered", message: "You do not need to register.  You are already registered.") if logged_in?
   haml :register
 end
 
 post '/register/?' do
-  ap params
+  error_page(title: "Already Registered", message: "You are already registered.") if logged_in?
   redirect to('/')
 end
 
 post '/login/?' do
   @user = User.find(:name => params[:name])
   if @user && Salty.check(params[:password], @user.values[:password])
-    puts "Login success!"
     @key = "user:" + session[:id]
     REDIS.set @key, @user.to_json
-    REDIS.expires @key, 60*60*24    # One day from now.
+    REDIS.expire @key, 60*60*24    # One day from now.
   else
     error_page(title: "Login Failed", message: "Your username or password was incorrect.")
   end
@@ -91,7 +111,7 @@ post '/upload/?' do
       (tempfile = params[:file][:tempfile]) && 
       (name = params[:file][:filename])
     status 400
-    error_page(title: "No File Selected", message: "You must choose a file to upload.")
+    error_page(title: "No File Selected", message: "Please choose a file to upload.")
   end
 
   # This gives us a short, URL-safe string and gives us free deduplication
@@ -109,15 +129,18 @@ end
 
 get '/view/:file' do
   unless valid_slug?(params[:file])
-    # Error 400 tells the client they should quit asking.
-    status 400
+    status 400  # Sure, nothing was found, but we want them to stop asking.  This can't be a real file, so 
+		# this request will never return useful content.  Someone mangled the slug, so it doesn't
+		# refer to anything.
     error_page(title: "No Such File", message: "We don't have a file like that.")
   end
 
   if File.exists?("./uploads/#{params[:file]}")
+    # The 200 is an HTTP status code.  TODO:  Make this a nice page, not just an ugly blob of text.
     halt 200, "I have your file.  You can download it <a href='/download/#{params[:file]}'>here</a>!"
   else
-    halt 404
+    status 404 # TODO Make a nicer 404 not found page.
+    error_page(title: "No Such File", message: "We don't have a file like that.")
   end
 end
 

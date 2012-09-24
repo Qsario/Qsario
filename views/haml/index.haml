@@ -2,8 +2,67 @@
 %html
   %head
     %title Qsario - Find and Share Minecraft Worlds
-    %link{:href => "/css/layout.css", :rel => "stylesheet", :type => "text/css"}/
-    %link{:href => "/css/colors.css", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/css/layout.css",      :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/css/colors.css",      :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "/css/file_upload.css", :rel => "stylesheet", :type => "text/css"}/
+
+    %script{:src => "/js/swfupload.js",       :type => "text/javascript"}
+    %script{:src => "/js/swfupload.queue.js", :type => "text/javascript"}
+    %script{:src => "/js/fileprogress.js",    :type => "text/javascript"}
+    %script{:src => "/js/handlers.js",        :type => "text/javascript"}
+
+    :javascript
+      var swfu;
+      var file_id = Math.random().toString(36).substring(2);
+      var key = "temp/" + file_id;
+
+      window.onload = function() {
+        var settings = {
+          flash_url: "/swfupload.swf",
+          upload_url: "https://qsario.s3.amazonaws.com/",
+          
+          post_params: {  
+            "key": key, 
+            "AWSAccessKeyId": "AKIAJIVH6QZ2Z2EJ235A",
+            "acl": "public-read",
+            "success_action_status": "201",
+            "policy": "ewogICJleHBpcmF0aW9uIjogIjIwMjAtMDEtMDFUMDA6MDA6MDBaIiwKICAiY29uZGl0aW9ucyI6IFsgCiAgICB7ImJ1Y2tldCI6ICJxc2FyaW8ifSwgCiAgICBbInN0YXJ0cy13aXRoIiwgIiRrZXkiLCAidGVtcC8iXSwKICAgIHsiYWNsIjogInB1YmxpYy1yZWFkIn0sCiAgICB7InN1Y2Nlc3NfYWN0aW9uX3N0YXR1cyIsICIyMDEifSwKICAgIFsic3RhcnRzLXdpdGgiLCAiJENvbnRlbnQtVHlwZSIsICIiXSwKICAgIFsic3RhcnRzLXdpdGgiLCAiJENvbnRlbnQtRGlzcG9zaXRpb24iLCAiYXR0YWNobWVudDsgZmlsZW5hbWU9Il0sCiAgICBbImNvbnRlbnQtbGVuZ3RoLXJhbmdlIiwgMSwgNzM0MDAzMjBdCiAgXQp9Cg==",
+            "signature": "cRcNQQolJCpAYvvsJfzmkBJ2Iik=",
+            "Content-Type": "application/octet-stream",
+            "Content-Disposition": "attachment"
+          },
+
+          file_size_limit : "70 MB",
+          file_types : "*.*",
+          file_types_description : "Minecraft Files",
+          file_upload_limit : 70,
+          file_queue_limit : 1,
+
+          custom_settings : {
+            progressTarget : "fsUploadProgress",
+            cancelButtonId : "btnCancel"
+          },
+
+          debug: false,
+          button_image_url: "images/select.png",
+          button_width: "100",
+          button_height: "29",
+          button_placeholder_id: "spanButtonPlaceHolder",
+
+          file_queued_handler : fileQueued,
+          file_queue_error_handler : fileQueueError,
+          file_dialog_complete_handler : fileDialogComplete,
+          upload_start_handler : uploadStart,
+          upload_progress_handler : uploadProgress,
+          upload_error_handler : uploadError,
+          upload_success_handler : uploadSuccess,
+          upload_complete_handler : uploadComplete,
+          queue_complete_handler : queueComplete 
+        };
+
+        swfu = new SWFUpload(settings);
+      };
+
     :css
       .tabs {
       	position: relative;
@@ -111,11 +170,17 @@
           %input#tab-4{:name => "tab-group-1", :type => "radio"}
             %label{:for => "tab-4"} Upload
             .content
-              %form{:action=>"/upload",:method=>"post",:enctype=>"multipart/form-data"}
-                %input{:type=>"file",:name=>"file"}
-                %input{:type=>"submit",:value=>"Upload"}
-              You need to log in to upload. Do you need to
-              = succeed "?" do
+              - if logged_in?
+                %form{:action=>"/test",:method=>"post",:enctype=>"multipart/form-data"}
+                  #fsUploadProgress.fieldset.flash
+                    %span.legend Upload Queue
+                  #divStatus Select a file
+                  %div
+                    %span#spanButtonPlaceHolder
+                    %input#btnCancel{:disabled => "disabled", :onclick => "swfu.cancelQueue();", :style => "margin-left: 2px; font-size: 8pt; height: 29px;", :type => "button", :value => "Cancel Upload"}/
+              - else 
+                You need to be logged in to upload. Do you need to
                 %a{:href => "/register"} create an account
+                ?
     / End of body
     = haml :footer

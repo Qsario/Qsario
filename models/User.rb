@@ -5,11 +5,13 @@ class User < Sequel::Model
   one_to_many :uploads
 
   def before_create
+    super
     self.enabled ||= true
     self.joined_at ||= Time.now
     self.takedowns ||= 0
-    self.admin = false	# Only allow this to be added to an existing user.
-    super
+    # Note that the default value of admin is false (c.f. the 001_ migration).
+    # this is only here as a failsafe to guard against accidents.
+    self.admin = false
   end
 
   def validate
